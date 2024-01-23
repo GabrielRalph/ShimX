@@ -121,8 +121,14 @@ export async function watchRanks(secretKey, cb) {
                 let allData = sc.val();
                 let leaderBoard = [];
                 if (allData != null) {
-                    let i = 0;
-                    leaderBoard = allData.rank.split(",").map(id => {allData[id].rank = i; i++; return allData[id]})
+                    let i = 1;
+                    leaderBoard = allData.rank.split(",").map(id => {
+                        let person = allData[id]
+                        person.me = id == getUID();
+                        person.rank = i; 
+                        i++; 
+                        return person;
+                    })
                 }
                 cb(leaderBoard);
                 resolve();
