@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id = "loading"></div>
+    <div id = "table">
+        <table><thead><tr><th>Rank</th><th>Name</th><th>City</th><th>Country</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div id = "input"><span>Name:</span><input type = "text"><b>SUBMIT</b></div>
+</body>
+<script type = "module">
+    import {getLocation} from "./location.js"
+    import {initialise, addRanking, hasRanked, watchRanks} from "./user.js"
+    let loading = document.getElementById("loading");
+    let submit = document.querySelector("b");
+
+    let chars = [..."Loading"].map(char => {let l = document.createElement("SPAN"); l.innerHTML = char; loading.appendChild(l); return l})
+    let loaded = false;
+    let next = () => {
+        let t = performance.now() / 200;
+        let adj = 0;
+        for (let char of chars) {
+            let scale = 0.3 * Math.sin(t + adj);
+            adj += 2*Math.PI/chars.length;
+            char.style.setProperty("transform", `scale(${1+scale})`)
+        }
+
+        if (!loaded) window.requestAnimationFrame(next);
+    }
+    window.requestAnimationFrame(next);
+
+    const key = "super_secret_specieal_key_19_24_3301_59991";
+    async function renderRanks(info = null){
+        await watchRanks(key, (ranks) => {
+            let i = 1;
+            let html = ""
+            for (let rank of ranks) {
+                let row = `<td>${i}</td>`
+                for (let key of ["name", "city", "country"]) row += `<td>${rank[key]}</td>`
+                html += `<tr>${row}</tr>`
+                i++
+            }
+            document.querySelector("tbody").innerHTML = html;
+        })
+        loaded = true;
+        document.body.toggleAttribute("loaded", true);
+        document.body.toggleAttribute("prompt", false);
+    }
+
+   
+    await initialise();
+
+    if (await hasRanked(key)) {
+        renderRanks();
+    } else {
+        document.body.toggleAttribute("prompt", true)
+        let info = getLocation();
+        let input = document.querySelector("input");
+        let set = false;
+        let setRanks = async () => {
+            if (!set) set = true;
+            else return;
+            document.body.toggleAttribute("loaded", false);
+            document.body.toggleAttribute("prompt", false);
+            info = await info;
+            info.name = input.value
+            await addRanking(key, info)
+            renderRanks();
+        }
+        submit.onclick = setRanks
+        input.addEventListener("keyup", (e) => {
+            if (e.key == "Enter") setRanks();
+        })
+    }
+   
+</script>
+
+<style>
+    body {
+        font-family: monospace;
+        font-size: 2em;
+        background: rgb(42, 43, 46);
+    }
+
+    body[prompt] #loading, body[loaded] #loading {
+        opacity: 0
+    }
+    body[loaded] #table, body[prompt] #input{
+        opacity: 1;
+        pointer-events: all;
+    }
+  
+    #input {
+        pointer-events: none;
+        opacity: 0;
+        padding: 4vmin;
+        border-radius: 20vmin;
+        display: flex;
+        gap: 0.2em;
+    }
+    #input b {
+        cursor: pointer;
+    }
+    #loading {
+        opacity: 1;
+        padding: 4vmin;
+        border-radius: 20vmin;
+        display: flex;
+        gap: 0.2em;
+    }
+    #loading , #table, #input {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background: white;
+        transform: translate(-50%, -50%);
+        transition: 0.5s;
+    }
+    #table {
+        opacity: 0;
+        width: 70vw;
+        height: 80vh;
+        border-radius: 3vmin;
+        padding: 3vmin;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        overflow: scroll;
+    }
+    #loading span {
+        display: block;
+    }
+    input {
+        border: none;
+        outline: none;
+        font: inherit;
+        border-bottom: 2px solid black;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    td {
+        text-align: center;
+    }
+    tr *:nth-child(n+2) {
+        border-left: 2px solid black;
+    }
+    th {
+        border-bottom: 2px solid black;
+    }
+</style>
+</html>
