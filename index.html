@@ -21,7 +21,7 @@
     <div id = "input" class = "window" >
         <div class="head">Please Enter Name</div>
         <div class="body">
-            <span>Name:</span><input class = "btn" type = "text"><b class = "btn">SUBMIT</b>
+            <span>Name:</span><input class = "btn" type = "text"><b class = "btn" name = "submit">SUBMIT</b>
         </div>
     </div>
 </body>
@@ -29,7 +29,7 @@
     import {getLocation} from "./location.js"
     import {initialise, addRanking, hasRanked, watchRanks} from "./user.js"
     let loading = document.getElementById("loading-text");
-    let submit = document.querySelector("b");
+    let submit = document.querySelector("[name='submit']");
 
     let chars = [..."Loading"].map(char => {let l = document.createElement("SPAN"); l.innerHTML = char; loading.appendChild(l); return l})
     let loaded = false;
