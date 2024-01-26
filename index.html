@@ -9,53 +9,80 @@
   <body>
 
     <canvas id="canvas"></canvas>
+    <!-- <img src="./Assets/Clown looking at fish.png" class="cf"> -->
+    <img class = "well" src="./Assets/Well.png" >
+    <img src="./Assets/TV on.png" draggable = "true" class ="tv">
   </body>
-  <!-- vertex shader -->
-  <script id="vs" type="f">
-    attribute vec2 position;
-    attribute vec2 texcoord;
+  
+  <script src = "./depth-fader.js"></script>
 
-    uniform mat3 u_matrix;
+  <script>
+    let xrel = 0, yrel = 0;
+    window.addEventListener("mousemove", (e) => {
+        xrel = e.clientX / window.innerWidth - 0.5;
+        yrel = e.clientY / window.innerHeight - 0.5;
+    })
+    let imgs = document.querySelectorAll("img");
+    let next = () => {
+        for (let img of imgs){
+            img.style.setProperty("--ax", xrel*5 + "vh");
+            img.style.setProperty("--ay", yrel*3 + "vh");
 
-    varying vec2 v_texcoord;
-
-    void main() {
-       gl_Position = vec4(u_matrix * vec3(position, 1), 1);
-       v_texcoord = texcoord;
+        }
+        requestAnimationFrame(next);
     }
+    document.querySelector("img.tv").addEventListener("dragend", (e) => {
+        let dx = Math.abs(e.screenX - 420);
+        let dy = Math.abs(e.screenY - 741);
+        console.log(dx, dy);
+        if (dx < 40 && dy < 30) {
+            alert("Hey you3 figur3d 0ut1 the secret.")
+        }
+    })
+    requestAnimationFrame(next);
+
   </script>
-
-  <!-- fragment shader -->
-  <script id="fs" type="f">
-    precision mediump float;
-
-    uniform vec2 u_mouse;
-
-    uniform sampler2D u_originalImage;
-    uniform sampler2D u_mapImage;
-
-    varying vec2 v_texcoord;
-
-    void main() {
-       vec4 depthDistortion = texture2D(u_mapImage, v_texcoord);
-       float parallaxMult = depthDistortion.r;
-
-       vec2 parallax = (u_mouse) * parallaxMult;
-
-       vec4 original = texture2D(u_originalImage, (v_texcoord + parallax));
-       gl_FragColor = original;
-    }
-  </script>
-  <script src = "./main.js"></script>
   <style>
+    body {
+        background: #376440;
+    }
     canvas {
       height: 100%;
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      min-width: 100vw;
-      min-height: 100vw;
+      /* min-width: 100vw; */
+      /* min-height: 100vw; */
+    }
+    img {
+        --ax: 3vh;
+        --ay: 3vh;
+        --cy: 82%;
+        --cx: 50%;
+        --h: 25vh;
+        position: fixed;
+        height: var(--h);
+        top: calc(var(--cy) + var(--ay));
+        left: calc(var(--cx) + var(--ax));
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        cursor: pointer;
+    }
+    .cf {
+        --h: 70vh;
+        --cy: 45%;
+        --cx: 62%;
+    }
+
+    .tv {
+        --h: 17vh;
+        --cy: 73.5%;
+        --cx: 82.5%;
+    }
+    img:hover {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
     }
   </style>
 </html>
