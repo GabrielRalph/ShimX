@@ -37,6 +37,22 @@ document.body.innerHTML += `<script id="fs" type="f">
     }
   </script>`
 
+export function relative({clientX, clientY}, canvas, mult = -0.025) {
+  let bbox = canvas.getBoundingClientRect();
+  let rx = (clientX - (bbox.x + bbox.width/2)) / bbox.width;
+  let ry = (clientY - (bbox.y + bbox.height/2)) / bbox.height;
+
+  rx = rx > 0.5 ? 0.5 : (rx < -0.5 ? -0.5 : rx);
+  ry = ry > 0.5 ? 0.5 : (ry < -0.5 ? -0.5 : ry);
+
+
+  return [rx * mult, ry * mult];
+}
+
+export function round(x, y = 3) {
+  return Math.round(Math.pow(10, y) * x) / Math.pow(10, y);
+}
+
 function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -75,13 +91,14 @@ function main() {
 
   const mouse = [0, 0];
   document.addEventListener('mousemove', (event) => {
-    mouse[0] = (event.clientX / window.innerWidth  * 2 - 1) * -0.02;
-    mouse[1] = (event.clientY / window.innerHeight * 2 - 1) * -0.02;
+    [mouse[0], mouse[1]] = relative(event, canvas)
+    // event.preventDefault();
+    // event.stopPropagation();
+   
   });
 
 	document.addEventListener('touchmove', (event) => {
-    mouse[0] = (event.touches[0].clientX / gl.canvas.clientWidth  * 2 - 1) * -0.02;
-    mouse[1] = (event.touches[0].clientY / gl.canvas.clientHeight * 2 - 1) * -0.02;
+    mouse = relative(event.touches[0], canvas)
   });
 
 	document.addEventListener('touchend', (event) => {
@@ -90,14 +107,13 @@ function main() {
   });
 
   let down = false;
-  document.addEventListener('mousedown', () => {
-    down = true;
-  })
-  document.addEventListener('mouseup', () => {
-    down = false;
-  })
+  // document.addEventListener('mousedown', () => {
+  //   down = true;
+  // })
+  // document.addEventListener('mouseup', () => {
+  //   down = false;
+  // })
 
-	var nMouse = [0, 0];
 
   requestAnimationFrame(render);
 
@@ -119,14 +135,15 @@ function main() {
     const imageAspect = originalImage.width / originalImage.height;
     const mat = m3.scaling(imageAspect / canvasAspect, -1);
 
-		nMouse[0] =  mouse[0];
-		nMouse[1] =  mouse[1];
+    canvas.plx = [mouse[0], mouse[1]];
+    canvas.parentNode.style.setProperty("--px", 0.5 + mouse[0]/0.025);
+    canvas.parentNode.style.setProperty("--py", 0.5 + mouse[1]/0.025);
     // calls gl.activeTexture, gl.bindTexture, gl.uniformXXX
     twgl.setUniforms(programInfo, {
       u_matrix: mat,
       u_originalImage: down ? T2: originalTexture,
       u_mapImage: down ? D2: mapTexture,
-      u_mouse: nMouse,
+      u_mouse: mouse,
     });
 
     // calls gl.drawArrays or gl.drawElements

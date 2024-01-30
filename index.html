@@ -8,81 +8,217 @@
   </head>
   <body>
 
-    <canvas id="canvas"></canvas>
-    <!-- <img src="./Assets/Clown looking at fish.png" class="cf"> -->
-    <img class = "well" src="./Assets/Well.png" >
-    <img src="./Assets/TV on.png" draggable = "true" class ="tv">
+    <div class = "center">
+      <div class = "relative">
+        <canvas id="canvas"></canvas>
+        <img src="./Assets/Clown looking at fish.png" draggable="false" hover = "cf" class="prlx cf">
+        <img src="./Assets/Clown thinking.png" draggable="false" hover = "cf" class="prlx cft">
+        <img class = "prlx well hover" hover = "well" src="./Assets/Well.png" >
+        <img src="./Assets/TV on.png" hover = "tv" draggable = "true" class ="hover prlx tv">
+
+
+        <!-- <div class = "dot"></div> -->
+      </div>
+    </div>
   </body>
   
-  <script src = "./depth-fader.js"></script>
 
-  <script>
-    let xrel = 0, yrel = 0;
-    window.addEventListener("mousemove", (e) => {
-        xrel = e.clientX / window.innerWidth - 0.5;
-        yrel = e.clientY / window.innerHeight - 0.5;
-    })
-    let imgs = document.querySelectorAll("img");
-    let next = () => {
-        for (let img of imgs){
-            img.style.setProperty("--ax", xrel*5 + "vh");
-            img.style.setProperty("--ay", yrel*3 + "vh");
+  <script type = "module">
+    import {relative, round} from "./depth-fader.js"
+    import {points} from "./points.js"
+    console.log(points);
 
-        }
-        requestAnimationFrame(next);
+    const hoverRegions = [
+      {
+        name: "cf",
+        min: [0.506, 0.318],
+        max: [0.692, 0.737]
+      },
+      {
+        name: "well",
+        min: [0.385, 0.723],
+        max: [0.659, 0.927]
+      },
+      {
+        name: "tv",
+        min: [0.731, 0.653],
+        max: [0.835, 0.811]
+      },
+    ]
+
+    let interp = []
+    function logPoints(){
+      let X = "";
+      let Y = "";
+      for (let {x, y} of interp) {
+        if (X.length > 0) X += ";\n"
+        if (Y.length > 0) Y += ";\n"
+        X += `${round(x[0], 7)}, ${round(x[1], 7)}`
+        Y += `${round(y[0], 4)}, ${round(y[1], 4)}`
+      }
+      console.log(`X = [${X}]\nY = [${Y}]`);
     }
-    document.querySelector("img.tv").addEventListener("dragend", (e) => {
-        let dx = Math.abs(e.screenX - 420);
-        let dy = Math.abs(e.screenY - 741);
-        console.log(dx, dy);
-        if (dx < 40 && dy < 30) {
-            alert("Hey you3 figur3d 0ut1 the secret.")
-        }
+    
+    let xrel = 0, yrel = 0;
+    let canvas = document.querySelector("canvas");
+    window.addEventListener("click", (e) => {
+        let [rx, ry] = relative(e, canvas, 1);
+        console.log(round(rx + 0.5, 3), round(ry + 0.5, 3));
     })
-    requestAnimationFrame(next);
 
+    window.addEventListener("mousemove", (e) => {
+      let [rx, ry] = relative(e, canvas, 1);
+      [rx, ry] = [rx + 0.5, ry + 0.5];
+      document.querySelectorAll("[mouseover]").forEach(a => {
+        if (performance.now() - a.tmo > 100) {
+          a.removeAttribute("mouseover")
+        }
+      })
+      for (let region of hoverRegions) {
+        if (rx > region.min[0] && rx < region.max[0] && ry > region.min[1] && ry < region.max[1] ) {
+          document.querySelectorAll(`[hover="${region.name}"]`).forEach(a => {
+            a.toggleAttribute("mouseover", true)
+            a.tmo = performance.now()
+          })
+        }
+      }
+    })
+
+    
+    function addDrag(el) {
+      console.log(el);
+      let drag = false;
+      let x = 0;
+      let y = 0;
+      el.addEventListener("mousedown", () => {drag = true; });
+      window.addEventListener("mouseup", () => {drag = false});
+      window.addEventListener("mousemove", (e) => {
+        if (drag) {
+          let dx = e.movementX / canvas.clientWidth;
+          let dy = e.movementY / canvas.clientHeight;
+          x += dx;
+          y += dy;
+          el.style.setProperty("--tx", x);
+          el.style.setProperty("--ty", y);
+
+          console.log(`--c1x: ${round(x*100, 1)}%;\n --c1y: ${round(y*100, 1)}%;`);
+        }
+      })
+    }
+    document.querySelectorAll(".drag").forEach(a => addDrag(a))
+   
   </script>
   <style>
     body {
         background: #376440;
     }
-    canvas {
-      height: 100%;
+    .center {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      /* min-width: 100vw; */
-      /* min-height: 100vw; */
     }
-    img {
-        --ax: 3vh;
-        --ay: 3vh;
-        --cy: 82%;
-        --cx: 50%;
-        --h: 25vh;
-        position: fixed;
-        height: var(--h);
-        top: calc(var(--cy) + var(--ay));
-        left: calc(var(--cx) + var(--ax));
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        cursor: pointer;
-    }
-    .cf {
-        --h: 70vh;
-        --cy: 45%;
-        --cx: 62%;
+    .relative {
+      position: relative;
     }
 
-    .tv {
-        --h: 17vh;
-        --cy: 73.5%;
-        --cx: 82.5%;
+    canvas {
+      height: 100vh;
+      /* min-width: 100vw;
+      min-height: 100vw; */
     }
-    img:hover {
+
+    .drag {
+      --tx: 0;
+      --ty: 0;
+      --h: 30%;
+      position: absolute;
+      height: var(--h);
+      top: calc(var(--ty) * 100%);
+      left: calc(var(--tx) * 100%);
+      transform: translate(-50%, -50%);
+    }
+
+    .prlx, .dot {
+        --c1x: 45%;
+        --c1y: 45%;
+        --c2y: 55%;
+        --c2x: 55%;
+        --h: 25%;
+        position: absolute;
+        height: var(--h);
+        top: calc(var(--c1y) * var(--py) + var(--c2y) * (1 - var(--py)));
+        left: calc(var(--c1x) * var(--px) + var(--c2x) * (1 - var(--px)));
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+      }
+      img {
+      /* filter: grayscale(100%); */
+
+    }
+    .dot {
+      height: 6px;
+      width: 6px;
+      background: red;
+      border-radius: 20px;
+    }
+
+
+
+    .well {
+      --c2x: 51.6%;
+      --c2y: 83%;
+      --c1x: 49.8%;
+      --c1y: 81.2%;
+      --h: 25%;
+    }
+
+    .cft {
+      --h: 43.4%;
+      --c1x: 53.3%;
+      --c1y: 56.1%;
+      --c2x: 54.5%;
+      --c2y: 57.3%;
+    }
+    
+    .cf {
+        --h: 82%;
+        --c1x: 59.1%;
+        --c1y: 42%;
+        --c2x: 60.3%;
+        --c2y: 43%;
+    }
+
+    .tv, .dot {
+        --h: 17%;
+        --c1x: 77.4%;
+        --c1y: 72.8%;
+        --c2x: 78.6%;
+        --c2y: 74%;
+    }
+
+    .cft[mouseover], .cf, .hover{
+      opacity: 0;
+    }
+    .cf[mouseover], .cft, .hover[mouseover]{
+      opacity: 1;
+    }
+
+    .hover {
+      transition: 0.1s ease-in transform;
+    }
+    .hover[mouseover] {
+      transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+
+    }
+    /* .hover, .hover-h:hover, .hover-s {
+      opacity: 0;
+    }
+    .hover:hover, .hover-s:hover {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
-    }
+      }
+    .hover:hover {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+    } */
   </style>
 </html>
