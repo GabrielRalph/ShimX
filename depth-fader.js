@@ -53,9 +53,25 @@ export function round(x, y = 3) {
   return Math.round(Math.pow(10, y) * x) / Math.pow(10, y);
 }
 
-let rendered = false;
+async function createTexture(gl, options) {
+  return new Promise((resolve, reject) => {
+    const tex = twgl.createTexture(gl, options, (err, texture, source) => {
+      if(err) reject(err);
+      else resolve([tex, source])
+    });
+  })
+}
 
-function main() {
+async function delay(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, time)
+  })
+}
+
+
+
+let rendered = false;
+async function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
   const canvas = document.getElementById("canvas");
@@ -64,27 +80,18 @@ function main() {
     return;
   }
 
-  let originalImage = { width: 1, height: 1 }; // replaced after loading
-  const originalTexture = twgl.createTexture(gl, {
+  const [originalTexture, originalImage] = await createTexture(gl, {
     src: "./Assets/empty_background.jpg",
     crossOrigin: '',
-  }, (err, texture, source) => {
-    originalImage = source;
-    let {naturalHeight, naturalWidth} = originalImage;
-    canvas.width = naturalWidth;
-    canvas.height = naturalHeight;
-  });
-  // const T2 = twgl.createTexture(gl, {
-  //   src: "./Assets/Clownfish side wall.png", crossOrigin: '',
-  // });
+  })
+  canvas.height = originalImage.naturalHeight;
+  canvas.width = originalImage.naturalWidth;
 
-  const mapTexture = twgl.createTexture(gl, {
+  const [mapTexture] = await createTexture(gl, {
     src: "./Assets/depth_map.png", crossOrigin: '',
   });
-  // const D2 = twgl.createTexture(gl, {
-  //   src: "./Assets/d2.png", crossOrigin: '',
-  // });
-
+  
+  console.log("textures")
   // compile shaders, link program, lookup location
   const programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
 
@@ -119,7 +126,6 @@ function main() {
 
   requestAnimationFrame(render);
 
-  let  fi = 0;
   function render() {
 
     // twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -152,11 +158,10 @@ function main() {
     // calls gl.drawArrays or gl.drawElements
     twgl.drawBufferInfo(gl, bufferInfo);
 
-    if (!rendered && fi > 1) {
+    if (!rendered) {
       rendered = true;
       document.querySelector(".center").style.setProperty("display", "block")
     }
-    fi++;
     requestAnimationFrame(render);
   }
 }
