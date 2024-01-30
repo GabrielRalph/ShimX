@@ -5,6 +5,121 @@
     <title></title>
     <script src = "https://cdn.rawgit.com/greggman/twgl.js/master/dist/4.x/twgl-full.min.js" type="text/javascript"></script>
     <script src = "https://webglfundamentals.org/webgl/resources/m3.js"></script>
+
+    <style>
+      body {
+          background: #376440;
+      }
+      .center {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .relative {
+        position: relative;
+      }
+  
+      canvas {
+        height: 100vh;
+        /* min-width: 100vw;
+        min-height: 100vw; */
+      }
+  
+      .drag {
+        --tx: 0;
+        --ty: 0;
+        --h: 30%;
+        position: absolute;
+        height: var(--h);
+        top: calc(var(--ty) * 100%);
+        left: calc(var(--tx) * 100%);
+        transform: translate(-50%, -50%);
+      }
+  
+      .prlx, .dot {
+          --c1x: 45%;
+          --c1y: 45%;
+          --c2y: 55%;
+          --c2x: 55%;
+          --h: 25%;
+          position: absolute;
+          height: var(--h);
+          top: calc(var(--c1y) * var(--py) + var(--c2y) * (1 - var(--py)));
+          left: calc(var(--c1x) * var(--px) + var(--c2x) * (1 - var(--px)));
+          transform: translate(-50%, -50%);
+          cursor: pointer;
+        }
+        img {
+        /* filter: grayscale(100%); */
+  
+      }
+      .dot {
+        height: 6px;
+        width: 6px;
+        background: red;
+        border-radius: 20px;
+      }
+  
+  
+  
+      .well {
+        --c2x: 51.6%;
+        --c2y: 83%;
+        --c1x: 49.8%;
+        --c1y: 81.2%;
+        --h: 25%;
+      }
+  
+      .cft {
+        --h: 43.4%;
+        --c1x: 53.3%;
+        --c1y: 56.1%;
+        --c2x: 54.5%;
+        --c2y: 57.3%;
+      }
+      
+      .cf {
+          --h: 82%;
+          --c1x: 59.1%;
+          --c1y: 42%;
+          --c2x: 60.3%;
+          --c2y: 43%;
+      }
+  
+      .tv, .dot {
+          --h: 17%;
+          --c1x: 77.4%;
+          --c1y: 72.8%;
+          --c2x: 78.6%;
+          --c2y: 74%;
+      }
+  
+      .cft[mouseover], .cf, .hover{
+        opacity: 0;
+      }
+      .cf[mouseover], .cft, .hover[mouseover]{
+        opacity: 1;
+      }
+  
+      .hover {
+        transition: 0.1s ease-in transform;
+      }
+      .hover[mouseover] {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+  
+      }
+      /* .hover, .hover-h:hover, .hover-s {
+        opacity: 0;
+      }
+      .hover:hover, .hover-s:hover {
+          opacity: 1;
+        }
+      .hover:hover {
+          transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+      } */
+    </style>
   </head>
   <body>
 
@@ -108,117 +223,5 @@
     document.querySelectorAll(".drag").forEach(a => addDrag(a))
    
   </script>
-  <style>
-    body {
-        background: #376440;
-    }
-    .center {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .relative {
-      position: relative;
-    }
-
-    canvas {
-      height: 100vh;
-      /* min-width: 100vw;
-      min-height: 100vw; */
-    }
-
-    .drag {
-      --tx: 0;
-      --ty: 0;
-      --h: 30%;
-      position: absolute;
-      height: var(--h);
-      top: calc(var(--ty) * 100%);
-      left: calc(var(--tx) * 100%);
-      transform: translate(-50%, -50%);
-    }
-
-    .prlx, .dot {
-        --c1x: 45%;
-        --c1y: 45%;
-        --c2y: 55%;
-        --c2x: 55%;
-        --h: 25%;
-        position: absolute;
-        height: var(--h);
-        top: calc(var(--c1y) * var(--py) + var(--c2y) * (1 - var(--py)));
-        left: calc(var(--c1x) * var(--px) + var(--c2x) * (1 - var(--px)));
-        transform: translate(-50%, -50%);
-        cursor: pointer;
-      }
-      img {
-      /* filter: grayscale(100%); */
-
-    }
-    .dot {
-      height: 6px;
-      width: 6px;
-      background: red;
-      border-radius: 20px;
-    }
-
-
-
-    .well {
-      --c2x: 51.6%;
-      --c2y: 83%;
-      --c1x: 49.8%;
-      --c1y: 81.2%;
-      --h: 25%;
-    }
-
-    .cft {
-      --h: 43.4%;
-      --c1x: 53.3%;
-      --c1y: 56.1%;
-      --c2x: 54.5%;
-      --c2y: 57.3%;
-    }
-    
-    .cf {
-        --h: 82%;
-        --c1x: 59.1%;
-        --c1y: 42%;
-        --c2x: 60.3%;
-        --c2y: 43%;
-    }
-
-    .tv, .dot {
-        --h: 17%;
-        --c1x: 77.4%;
-        --c1y: 72.8%;
-        --c2x: 78.6%;
-        --c2y: 74%;
-    }
-
-    .cft[mouseover], .cf, .hover{
-      opacity: 0;
-    }
-    .cf[mouseover], .cft, .hover[mouseover]{
-      opacity: 1;
-    }
-
-    .hover {
-      transition: 0.1s ease-in transform;
-    }
-    .hover[mouseover] {
-      transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
-
-    }
-    /* .hover, .hover-h:hover, .hover-s {
-      opacity: 0;
-    }
-    .hover:hover, .hover-s:hover {
-        opacity: 1;
-      }
-    .hover:hover {
-        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
-    } */
-  </style>
+ 
 </html>

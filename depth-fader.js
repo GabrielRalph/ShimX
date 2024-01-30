@@ -53,6 +53,8 @@ export function round(x, y = 3) {
   return Math.round(Math.pow(10, y) * x) / Math.pow(10, y);
 }
 
+let rendered = false;
+
 function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -72,16 +74,16 @@ function main() {
     canvas.width = naturalWidth;
     canvas.height = naturalHeight;
   });
-  const T2 = twgl.createTexture(gl, {
-    src: "./Assets/Clownfish side wall.png", crossOrigin: '',
-  });
+  // const T2 = twgl.createTexture(gl, {
+  //   src: "./Assets/Clownfish side wall.png", crossOrigin: '',
+  // });
 
   const mapTexture = twgl.createTexture(gl, {
     src: "./Assets/depth_map.png", crossOrigin: '',
   });
-  const D2 = twgl.createTexture(gl, {
-    src: "./Assets/d2.png", crossOrigin: '',
-  });
+  // const D2 = twgl.createTexture(gl, {
+  //   src: "./Assets/d2.png", crossOrigin: '',
+  // });
 
   // compile shaders, link program, lookup location
   const programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
@@ -106,7 +108,7 @@ function main() {
     mouse[1] = 0;
   });
 
-  let down = false;
+  // let down = false;
   // document.addEventListener('mousedown', () => {
   //   down = true;
   // })
@@ -117,6 +119,7 @@ function main() {
 
   requestAnimationFrame(render);
 
+  let  fi = 0;
   function render() {
 
     // twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -141,14 +144,19 @@ function main() {
     // calls gl.activeTexture, gl.bindTexture, gl.uniformXXX
     twgl.setUniforms(programInfo, {
       u_matrix: mat,
-      u_originalImage: down ? T2: originalTexture,
-      u_mapImage: down ? D2: mapTexture,
+      u_originalImage: originalTexture,
+      u_mapImage: mapTexture,
       u_mouse: mouse,
     });
 
     // calls gl.drawArrays or gl.drawElements
     twgl.drawBufferInfo(gl, bufferInfo);
 
+    if (!rendered && fi > 1) {
+      rendered = true;
+      document.querySelector(".center").style.setProperty("display", "block")
+    }
+    fi++;
     requestAnimationFrame(render);
   }
 }
