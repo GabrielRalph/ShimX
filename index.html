@@ -8,17 +8,23 @@
 
     <style>
       body {
-          background: #376440;
+        font-family: Arial, Helvetica, sans-serif;
+          background: #white;
+          --wave: cubic-bezier(0.364, 0, 0.636, 1);
+      }
+      body:not([loading]) .loader {
+        display: none;
       }
       [loading] .center {
-        display: none;
+        opacity: 0;
       }
       .center {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
+        opacity: 1;
+        transition: 1s var(--wave);
         --px: 0;
         --py: 0;
       }
@@ -57,7 +63,6 @@
       .clickbox {
         top: calc(var(--c1y) * 100%);
         left: calc(var(--c1x) * 100%);
-        cursor: pointer;
         opacity: 0;
       }
   
@@ -78,34 +83,122 @@
       .icon[name = 'ct'],
       .icon[name = 'well'] {
         opacity: 0;
-        visibility: hidden;
         transition: 0.1s ease transform;
       }
 
       .icon[name = 'cf'][mouseover],
       .icon[name = 'ct'][mouseover]{
-        visibility: visible;
+        opacity: 1;
       }
 
-      .icon[name = 'cf'],
-      .icon[name = 'ct']{
-        animation-name: onoff;
-        animation-duration: 2s;
+      .loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 50vw;
+        transform: translate(-50%, -50%);
+        --d: 3s;
+    }
+
+    .loader>div {
+        position: relative;
+    }
+
+    .fish-icons{
+        animation-duration: var(--d);
         animation-iteration-count: infinite;
-      }
-      .icon[name = 'cf'] {
-        animation-delay: 1s;
-      }
-      @keyframes onoff {
-        0% {opacity: 0;}
-        1% {opacity: 1;}
-        50% {opacity: 1;}
-        51% {opacity: 0;}
-        100% {opacity: 0;}
-      }
+        animation-timing-function: linear;
+        animation-name: swim;
+        offset-rotate: 0deg;
+        offset-path: path("M250,89.82c-26.34,0-45.98,46.89-72.32,46.89s-45.98-46.89-72.32-46.89s-54.6,39.89-72.32,46.89s-30.28-9.62-30.28-23.45s12.56-30.45,30.28-23.45s45.98,46.89,72.32,46.89s45.98-46.89,72.32-46.89s45.98,46.89,72.32,46.89s45.98-46.89,72.32-46.89s45.98,46.89,72.32,46.89s54.6-39.89,72.32-46.89s30.28,9.62,30.28,23.45s-12.56,30.45-30.28,23.45s-45.98-46.89-72.32-46.89s-45.98,46.89-72.32,46.89S276.34,89.82,250,89.82");
+    }
+     svg[loaded] .fish-icons path {
+        opacity: 0;
+    }
 
+    .msg {
+        text-align: center;
+        font-weight: bold;
+        font-size: 2em;
+        display: flex;
+        justify-content: center;
+        gap: 0.3em;
+    }
 
+    .msg span {
+        --d2: calc(var(--d)/2);
+        animation-duration: var(--d2);
+        animation-iteration-count: infinite;
+        animation-name: pulse;
+        animation-timing-function: var(--wave);
+    }
 
+    .msg span:nth-child(1){animation-delay: calc(var(--d2)/8);}
+    .msg span:nth-child(2){animation-delay: calc(2 * var(--d2)/8);}
+    .msg span:nth-child(3){animation-delay: calc(3 * var(--d2)/8);}
+    .msg span:nth-child(4){animation-delay: calc(4 * var(--d2)/8);}
+    .msg span:nth-child(5){animation-delay: calc(5 * var(--d2)/8);}
+    .msg span:nth-child(6){animation-delay: calc(6 * var(--d2)/8);}
+    .msg span:nth-child(7){animation-delay: calc(7 * var(--d2)/8);}
+
+  
+    
+
+    @keyframes pulse {
+        00% {transform: scale(1);}
+        50% {transform: scale(1.3);}
+        100% {transform: scale(1);}
+    }
+
+    
+    @keyframes swim {
+        0% {
+            offset-distance: 0%;
+            transform: scale(1, 1);
+            offset-rotate: 0deg;
+        }
+        3.58% {offset-rotate: -15deg;}
+        7.16% {offset-rotate: 0deg;}
+        10.74% {offset-rotate: 15deg;}
+        14.32% {offset-rotate: 0deg;}
+        17.9% {offset-rotate: -15deg;}
+        22.3% {
+            offset-rotate: 0deg;
+            transform: scale(1, 1);
+        }
+        27.7% {
+            offset-rotate: 0deg;
+            transform: scale(-1, 1);
+        }
+        31.72% {offset-rotate: 15deg;}
+        35.73% {offset-rotate: 0deg;}
+        39.31% {offset-rotate: -15deg;}
+        42.89% {offset-rotate: 0deg;}
+        46.47% {offset-rotate: 15deg;}
+        50.05% {offset-rotate: 0deg;}
+        53.63% {offset-rotate: -15deg;}
+        57.21% {offset-rotate: 0deg;}
+        60.79% {offset-rotate: 15deg;}
+        64.37% {offset-rotate: 0deg;}
+        67.95% {offset-rotate: -15deg;}
+        72.3% {
+            offset-rotate: 0deg;
+            transform: scale(-1, 1);
+        }
+        77.7% {
+            offset-rotate: 0deg;
+            transform: scale(1, 1);
+        }
+        81.7% {offset-rotate: 15deg;}
+        85.7% {offset-rotate: 0deg;}
+        89.28% {offset-rotate: -15deg;}
+        92.86% {offset-rotate: 0deg;}
+        96.44% {offset-rotate: 15deg;}
+        100% {
+            offset-rotate: 0deg;
+            offset-distance: 100%;
+        }
+    }
  
    
       
@@ -113,6 +206,26 @@
     </style>
   </head>
   <body loading>
+
+    <div class="loader">
+      <div>
+          <svg viewBox="-100 0 700 200">
+              <g class = "fish-icons">
+                  <path d="M83.85,5.07c-6.12-2.34-17.97-4.43-20.83-5.22c-2.87-0.79-5.08-3.24-9.37-4.03c-4.3-0.78-7.81-1.17-9.64-1.69s-3.78-3.52-6.9-4.04c-0.37-0.06-0.7-0.16-1.02-0.28l-1.67,7.88l-4.64-0.84l2.53-9.77c-0.74-0.6-1.56-1.16-2.62-1.54C26.44-15.62,19.4-20.44,15.63-22c-1.88-0.78-7.4-2.18-12.97-3.55c-1.83,1.28-4.14,2.95-5.37,4.07c-2.25,2.05-6.09,6.42-6.02,15.95C-8.67,4,5.35,7.24,5.35,7.24L3.7,15.18c0,0-8.59,1.79-16.11-6.88c-7.52-8.67,0-35.7,0-35.7l0.64-1.76c-4.85-1.17-15.73-2.65-17.03-2.99c-1.42-0.37-8.88-0.9-14.62-0.45c-4.33,0.34-7.46,1.49-8.81,2.16c-1.35,0.67-8.7,2.39-12.63,4.65c-3.92,2.26-15.07,12.51-18.84,17.18c-3.77,4.67-10.85,20.5-10.85,20.5c-1.06,2.33-1.67,2.69-1.02,6.47c0.65,3.78,5.99,6.77,11.07,8.2c5.08,1.43,11.98,2.61,18.62,4.04c4.24,0.92,9.22,1.09,13.52,1.12c0.01-0.01,6.37-12.48,8.19-18.5S-44.4-1.79-44.4-1.79l11.26-0.79l0.57-10.35L-47.02-9.4l-1.37-9.66c0,0,9.94-2.13,12.92-2.13s8.76,0.08,8.76,0.08S-27.04-8.1-27.3-1.81c-0.25,6.29-0.51,12.33-1.62,17.01c-1.11,4.68-8.68,17.01-8.68,17.01c2.05,0.08,4.56,0.13,8.03,0.08c9.11-0.13,30.08-2.99,35.15-4.43c4.71-1.33,17.93-7.03,23.15-9.4l1.53-14.28h4.43l-0.59,11.1c2.55-1.85,4.93-3.73,7.03-3.81c3.25-0.13,7.68,4.04,12.76,7.03s11.72,11.19,20.7,14.58c8.99,3.39,8.99,2.08,7.94-0.91c-1.04-2.99-12.5-12.11-10.55-16.14c1.95-4.04,7.94-1.17,9.64-1.43c1.7-0.26,4.04-1.95,7.29-1.82c3.25,0.13,8.2,1.69,8.2,0C97.13,11.06,89.97,7.42,83.85,5.07z M20.36,2l-4.65,19.55l-3.37,1.28c0,0,1.75-5.26,2.9-8.29c1.14-3.03,1.21-8.97,1.21-11.8c0-2.83-4.11-5.46-6.2-6.95C8.15-5.68,1.95-7.24,1.95-7.24l3.41-8.03L22.79-7.1L20.36,2z" />
+                  <image style="overflow:visible;" width="755" height="271" xlink:href="./Assets/fish_thumb.png" transform="matrix(0.2649 0 0 0.2649 -100 -35.894)"></image>
+              </g>
+          </svg>
+          <div class = "msg">
+                  <span>L</span>
+                  <span>O</span>
+                  <span>A</span>
+                  <span>D</span>
+                  <span>I</span>
+                  <span>N</span>
+                  <span>G</span>
+          </div>
+      </div>
+  </div>
 
     <div class = "center">
       <div class = "relative">
@@ -126,10 +239,12 @@
 
   <script type = "module">
     import {load} from "./icons.js"
-    import {relative, round, initialise} from "./depth-fader.js"
+    import {relative, round, initialise, delay} from "./depth-fader.js"
+    
     await initialise();
     await load();
     
+    await delay(4000 - performance.now())
     document.body.removeAttribute("loading")
     let canvas = document.querySelector("canvas");
 
