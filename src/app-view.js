@@ -102,7 +102,7 @@ class AppView extends SvgPlus {
             console.log(e.icons);
             console.log(e.icons[0]);
             switch (e.icons[0].name) {
-                case "well":
+                case "tv":
                     this.playTrailer();
                     break;
 
