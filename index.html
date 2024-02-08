@@ -3,94 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <script src = "https://cdn.rawgit.com/greggman/twgl.js/master/dist/4.x/twgl-full.min.js" type="text/javascript"></script>
-    <script src = "https://webglfundamentals.org/webgl/resources/m3.js"></script>
-
+    
     <style>
+      /* Loader STYLES */
       body {
         font-family: Arial, Helvetica, sans-serif;
-          background: #white;
+          background: white;
           --wave: cubic-bezier(0.364, 0, 0.636, 1);
       }
-      body:not([loading]) .loader {
-        display: none;
-      }
-      [loading] .center {
-        opacity: 0;
-      }
-      .center {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-        transition: 1s var(--wave);
-        --px: 0;
-        --py: 0;
-      }
-      .relative {
-        position: relative;
-      }
-      
-      @media (max-aspect-ratio: 4000/2250) {
-        canvas {
-          height: 102vh;
-        }
-      }
-      @media (min-aspect-ratio: 4000/2250) {
-        canvas {
-          width: 102vw;
-        }
-      }
-      
-
-      #icons {
-        display: contents;
-      }
-
-      .icon, .clickbox {
-        --c1x: 0;
-        --c1y: 0;
-        --c2x: 0;
-        --c2y: 0;
-        --h: 0;
-        
-        position: absolute;
-        height: calc(100% * var(--h));
-        transform: translate(-50%, -50%);
-      }
-  
-      .clickbox {
-        top: calc(var(--c1y) * 100%);
-        left: calc(var(--c1x) * 100%);
-        opacity: 0;
-      }
-  
-      .icon {
-        top: calc(100% * var(--c2y) * var(--py) + 100% * var(--c1y) * (1 - var(--py)));
-        left: calc(100% * var(--c2x) * var(--px) + 100% * var(--c1x) * (1 - var(--px)));
-      }
-
-      .icon[name = 'tv'][mouseover],
-      .icon[name = 'well'][mouseover] {
-        visibility: visible;
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1) rotate(8deg);
-      }
-
-      .icon[name = 'tv'],
-      .icon[name = 'cf'],
-      .icon[name = 'ct'],
-      .icon[name = 'well'] {
-        opacity: 0;
-        transition: 0.1s ease transform;
-      }
-
-      .icon[name = 'cf'][mouseover],
-      .icon[name = 'ct'][mouseover]{
-        opacity: 1;
-      }
-
       .loader {
         position: fixed;
         top: 50%;
@@ -98,7 +18,7 @@
         width: 50vw;
         transform: translate(-50%, -50%);
         --d: 3s;
-    }
+      }
 
     .loader>div {
         position: relative;
@@ -199,172 +119,250 @@
             offset-distance: 100%;
         }
     }
- 
-   
-      
-    
+
     </style>
+
+    <style>
+      /* App View STYLES */
+      app-view {
+        display: block;
+      }
+      app-view[loading] main {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      main {
+        opacity: 1;
+        transition: 1s var(--wave);
+      }
+
+
+      main .trailer {
+        opacity: 0;
+      }
+    
+
+
+
+      .home {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        --px: 0;
+        --py: 0;
+      }
+      .relative {
+        position: relative;
+      }
+      
+      @media (max-aspect-ratio: 4000/2250) {
+        canvas {
+          height: 102vh;
+        }
+      }
+      @media (min-aspect-ratio: 4000/2250) {
+        canvas {
+          width: 102vw;
+        }
+      }
+      
+
+      .icon, .clickbox {
+        --c1x: 0;
+        --c1y: 0;
+        --c2x: 0;
+        --c2y: 0;
+        --h: 0;
+        
+        position: absolute;
+        height: calc(100% * var(--h));
+        transform: translate(-50%, -50%);
+      }
+  
+      .clickbox {
+        top: calc(var(--c1y) * 100%);
+        left: calc(var(--c1x) * 100%);
+        opacity: 0;
+      }
+  
+      .icon {
+        top: calc(100% * var(--c2y) * var(--py) + 100% * var(--c1y) * (1 - var(--py)));
+        left: calc(100% * var(--c2x) * var(--px) + 100% * var(--c1x) * (1 - var(--px)));
+      }
+
+      
+
+      .icon[name = 'tv'],
+      .icon[name = 'cf'],
+      .icon[name = 'ct'],
+      .icon[name = 'well'] {
+        opacity: 0;
+        transition: 0.1s ease transform;
+      }
+      .icon[name = 'cf'][mouseover],
+      .icon[name = 'ct'][mouseover]{
+        opacity: 1;
+      }
+      .icon[name = 'tv'][mouseover],
+      .icon[name = 'well'][mouseover] {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1) rotate(8deg);
+      }
+
+     
+
+
+    .trailer {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #000000e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 1.5s var(--wave);
+        opacity: 0;
+        pointer-events: none;
+
+      }
+      app-view[page = trailer] .trailer{
+        opacity: 1;
+        pointer-events: all;
+      }
+      video {
+        max-width: 100%;
+        max-height: 100%;
+
+      }
+
+      app-view:not([page = credits]) credits-page {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      credits-page {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: 1.3em;
+        background: #009cf6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color:white;
+        transition: 0.5s var(--wave);
+
+      }
+      credits-page a {
+        color: #ef1f0b;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      
+      credits-page .close {
+        position: fixed;
+        top: 1em;
+        left: 1em;
+        font-size: 2em;
+        cursor: pointer;
+      }
+      .logo {
+        position: relative;
+        width: 1.5em;
+        height: 1.5em;
+        display: inline-block;
+        transform: translateY(25%);
+}
+.logo video {
+  position: absolute;
+  top: 6%;
+  left: 6%;
+  width: 86%;
+  height: 86%;
+}
+
+.logo .logo-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.logo .logo-mask .mask {
+  fill: #009cf6;
+}
+
+.logo .logo-mask.placeholder .dummy {
+  fill: #e00150;
+  stroke:#e00150;
+}
+
+.logo .logo-mask .dummy {
+  fill: transparent;
+  stroke: none;
+  transition: 0.4s cubic-bezier(0.4,0,0.6,1) fill;
+}
+
+  
+    </style>
+
   </head>
-  <body loading>
-
-    <div class="loader">
-      <div>
-          <svg viewBox="-100 0 700 200">
-              <g class = "fish-icons">
-                  <path d="M83.85,5.07c-6.12-2.34-17.97-4.43-20.83-5.22c-2.87-0.79-5.08-3.24-9.37-4.03c-4.3-0.78-7.81-1.17-9.64-1.69s-3.78-3.52-6.9-4.04c-0.37-0.06-0.7-0.16-1.02-0.28l-1.67,7.88l-4.64-0.84l2.53-9.77c-0.74-0.6-1.56-1.16-2.62-1.54C26.44-15.62,19.4-20.44,15.63-22c-1.88-0.78-7.4-2.18-12.97-3.55c-1.83,1.28-4.14,2.95-5.37,4.07c-2.25,2.05-6.09,6.42-6.02,15.95C-8.67,4,5.35,7.24,5.35,7.24L3.7,15.18c0,0-8.59,1.79-16.11-6.88c-7.52-8.67,0-35.7,0-35.7l0.64-1.76c-4.85-1.17-15.73-2.65-17.03-2.99c-1.42-0.37-8.88-0.9-14.62-0.45c-4.33,0.34-7.46,1.49-8.81,2.16c-1.35,0.67-8.7,2.39-12.63,4.65c-3.92,2.26-15.07,12.51-18.84,17.18c-3.77,4.67-10.85,20.5-10.85,20.5c-1.06,2.33-1.67,2.69-1.02,6.47c0.65,3.78,5.99,6.77,11.07,8.2c5.08,1.43,11.98,2.61,18.62,4.04c4.24,0.92,9.22,1.09,13.52,1.12c0.01-0.01,6.37-12.48,8.19-18.5S-44.4-1.79-44.4-1.79l11.26-0.79l0.57-10.35L-47.02-9.4l-1.37-9.66c0,0,9.94-2.13,12.92-2.13s8.76,0.08,8.76,0.08S-27.04-8.1-27.3-1.81c-0.25,6.29-0.51,12.33-1.62,17.01c-1.11,4.68-8.68,17.01-8.68,17.01c2.05,0.08,4.56,0.13,8.03,0.08c9.11-0.13,30.08-2.99,35.15-4.43c4.71-1.33,17.93-7.03,23.15-9.4l1.53-14.28h4.43l-0.59,11.1c2.55-1.85,4.93-3.73,7.03-3.81c3.25-0.13,7.68,4.04,12.76,7.03s11.72,11.19,20.7,14.58c8.99,3.39,8.99,2.08,7.94-0.91c-1.04-2.99-12.5-12.11-10.55-16.14c1.95-4.04,7.94-1.17,9.64-1.43c1.7-0.26,4.04-1.95,7.29-1.82c3.25,0.13,8.2,1.69,8.2,0C97.13,11.06,89.97,7.42,83.85,5.07z M20.36,2l-4.65,19.55l-3.37,1.28c0,0,1.75-5.26,2.9-8.29c1.14-3.03,1.21-8.97,1.21-11.8c0-2.83-4.11-5.46-6.2-6.95C8.15-5.68,1.95-7.24,1.95-7.24l3.41-8.03L22.79-7.1L20.36,2z" />
-                  <image style="overflow:visible;" width="755" height="271" xlink:href="./Assets/fish_thumb.png" transform="matrix(0.2649 0 0 0.2649 -100 -35.894)"></image>
-              </g>
-          </svg>
-          <div class = "msg">
-                  <span>L</span>
-                  <span>O</span>
-                  <span>A</span>
-                  <span>D</span>
-                  <span>I</span>
-                  <span>N</span>
-                  <span>G</span>
+  <body>
+    <app-view loading>
+      <div class="loader">
+        <div>
+            <svg viewBox="-100 0 700 200">
+                <g class = "fish-icons">
+                    <path d="M83.85,5.07c-6.12-2.34-17.97-4.43-20.83-5.22c-2.87-0.79-5.08-3.24-9.37-4.03c-4.3-0.78-7.81-1.17-9.64-1.69s-3.78-3.52-6.9-4.04c-0.37-0.06-0.7-0.16-1.02-0.28l-1.67,7.88l-4.64-0.84l2.53-9.77c-0.74-0.6-1.56-1.16-2.62-1.54C26.44-15.62,19.4-20.44,15.63-22c-1.88-0.78-7.4-2.18-12.97-3.55c-1.83,1.28-4.14,2.95-5.37,4.07c-2.25,2.05-6.09,6.42-6.02,15.95C-8.67,4,5.35,7.24,5.35,7.24L3.7,15.18c0,0-8.59,1.79-16.11-6.88c-7.52-8.67,0-35.7,0-35.7l0.64-1.76c-4.85-1.17-15.73-2.65-17.03-2.99c-1.42-0.37-8.88-0.9-14.62-0.45c-4.33,0.34-7.46,1.49-8.81,2.16c-1.35,0.67-8.7,2.39-12.63,4.65c-3.92,2.26-15.07,12.51-18.84,17.18c-3.77,4.67-10.85,20.5-10.85,20.5c-1.06,2.33-1.67,2.69-1.02,6.47c0.65,3.78,5.99,6.77,11.07,8.2c5.08,1.43,11.98,2.61,18.62,4.04c4.24,0.92,9.22,1.09,13.52,1.12c0.01-0.01,6.37-12.48,8.19-18.5S-44.4-1.79-44.4-1.79l11.26-0.79l0.57-10.35L-47.02-9.4l-1.37-9.66c0,0,9.94-2.13,12.92-2.13s8.76,0.08,8.76,0.08S-27.04-8.1-27.3-1.81c-0.25,6.29-0.51,12.33-1.62,17.01c-1.11,4.68-8.68,17.01-8.68,17.01c2.05,0.08,4.56,0.13,8.03,0.08c9.11-0.13,30.08-2.99,35.15-4.43c4.71-1.33,17.93-7.03,23.15-9.4l1.53-14.28h4.43l-0.59,11.1c2.55-1.85,4.93-3.73,7.03-3.81c3.25-0.13,7.68,4.04,12.76,7.03s11.72,11.19,20.7,14.58c8.99,3.39,8.99,2.08,7.94-0.91c-1.04-2.99-12.5-12.11-10.55-16.14c1.95-4.04,7.94-1.17,9.64-1.43c1.7-0.26,4.04-1.95,7.29-1.82c3.25,0.13,8.2,1.69,8.2,0C97.13,11.06,89.97,7.42,83.85,5.07z M20.36,2l-4.65,19.55l-3.37,1.28c0,0,1.75-5.26,2.9-8.29c1.14-3.03,1.21-8.97,1.21-11.8c0-2.83-4.11-5.46-6.2-6.95C8.15-5.68,1.95-7.24,1.95-7.24l3.41-8.03L22.79-7.1L20.36,2z" />
+                    <image onload = "this.ownerSVGElement.toggleAttribute('loaded', true)" style="overflow:visible;" width="755" height="271" xlink:href="./Assets/fish_thumb.png" transform="matrix(0.2649 0 0 0.2649 -100 -35.894)"></image>
+                </g>
+            </svg>
+            <div class = "msg">
+                    <span>L</span>
+                    <span>O</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>I</span>
+                    <span>N</span>
+                    <span>G</span>
+            </div>
+        </div>
+      </div>
+      <main>
+        <div class = "home">
+          <div class = "relative">
+            <canvas id="canvas"></canvas>
+            <icon-group></icon-group>
           </div>
-      </div>
-  </div>
+        </div>
+    
+        <div class = "trailer">
+          <video id = "showreal" playsinline>
+            <source src= "./Assets/Hidden/trailer.mov" type="video/mp4">
+          </video>
+        </div>
 
-    <div class = "center">
-      <div class = "relative">
-        <canvas id="canvas"></canvas>
-        <div id = "icons"></div>
-        <!-- <div class = "dot"></div> -->
-      </div>
-    </div>
+        <credits-page></credits-page>
+      </main>
+    </app-view>
+    
   </body>
   
 
   <script type = "module">
-    import {load} from "./icons.js"
-    import {relative, round, initialise, delay} from "./depth-fader.js"
-    
-    await initialise();
-    await load();
-    
-    await delay(4000 - performance.now())
-    document.body.removeAttribute("loading")
-    let canvas = document.querySelector("canvas");
-
-    window.addEventListener("mousemove", (e) => {
-      let [rx, ry] = relative(e, canvas, 1);
-      canvas.prlx = [rx, ry];
-    });
-
-    // //   let lg = ''
-    // //   for (let key in styles) {
-    // //     let s = '';
-    // //     for (let p in styles[key]) s += `${p}: ${styles[key][p]};\n`
-    // //     lg += `.${key} {\n${s}}\n`
-    // //   }
-    // //   console.log(lg);
-    // // }
-    // // let mode = 1;
-    // // let styles = {};
-    // // window.addEventListener("keydown", (e) => {
-    // //   console.log(e);
-    // //   if (e.key == "s") {
-    // //     canvas.prlx = [0, 0];
-    // //     mode = 1;
-    // //   } else if (e.key == "e") {
-    // //     canvas.prlx = [1, 1];
-    // //     mode = 2;
-    // //   } else if (e.key == "c") {
-    // //     document.querySelectorAll(".drag").forEach(a => {
-    // //       if (a.prlx) {
-    // //         let name = a.getAttribute("name");
-    // //         if (!(name in styles)) styles[name] = {};
-    // //         let [x, y] = a.prlx;
-    // //         styles[name][`--c${mode}x`] = `${round(x*100, 1)}%`;
-    // //         styles[name][`--c${mode}y`] = `${round(y*100, 1)}%`;
-    // //       }
-    // //       logStyle();
-    // //     })
-        
-    // //   }
-    // // })
-
-
-    // const hoverRegions = [
-    //   {
-    //     name: "cf",
-    //     min: [0.506, 0.318],
-    //     max: [0.692, 0.737]
-    //   },
-    //   {
-    //     name: "well",
-    //     min: [0.385, 0.723],
-    //     max: [0.659, 0.927]
-    //   },
-    //   {
-    //     name: "tv",
-    //     min: [0.731, 0.653],
-    //     max: [0.835, 0.811]
-    //   },
-    // ]
-
-    // // let interp = []
-    // // function logPoints(){
-    // //   let X = "";
-    // //   let Y = "";
-    // //   for (let {x, y} of interp) {
-    // //     if (X.length > 0) X += ";\n"
-    // //     if (Y.length > 0) Y += ";\n"
-    // //     X += `${round(x[0], 7)}, ${round(x[1], 7)}`
-    // //     Y += `${round(y[0], 4)}, ${round(y[1], 4)}`
-    // //   }
-    // //   console.log(`X = [${X}]\nY = [${Y}]`);
-    // // }
-    
-    // let xrel = 0, yrel = 0;
-    // window.addEventListener("click", (e) => {
-    //     let [rx, ry] = relative(e, canvas, 1);
-    //     console.log(round(rx, 3), round(ry, 3));
-    // })
-
-    // window.addEventListener("mousemove", (e) => {
-    //   let [rx, ry] = relative(e, canvas, 1);
-    //   canvas.prlx = [rx, ry];
-    //   document.querySelectorAll("[mouseover]").forEach(a => {
-    //     if (performance.now() - a.tmo > 100) {
-    //       a.removeAttribute("mouseover")
-    //     }
-    //   })
-    //   for (let region of hoverRegions) {
-    //     if (rx > region.min[0] && rx < region.max[0] && ry > region.min[1] && ry < region.max[1] ) {
-    //       document.querySelectorAll(`[hover="${region.name}"]`).forEach(a => {
-    //         a.toggleAttribute("mouseover", true)
-    //         a.tmo = performance.now()
-    //       })
-    //     }
-    //   }
-    // })
-
-    
-    // function addDrag(el) {
-    //   console.log(el);
-    //   let drag = false;
-    //   let x = 0;
-    //   let y = 0;
-    //   el.addEventListener("mousedown", () => {drag = true; });
-    //   window.addEventListener("mouseup", () => {drag = false});
-    //   window.addEventListener("mousemove", (e) => {
-    //     if (drag) {
-    //       let dx = e.movementX / canvas.clientWidth;
-    //       let dy = e.movementY / canvas.clientHeight;
-    //       x += dx;
-    //       y += dy;
-    //       el.style.setProperty("--tx", x);
-    //       el.style.setProperty("--ty", y);
-    //       el.prlx = [x, y];
-          
-    //     }
-    //   })
-    // }
-    // document.querySelectorAll(".drag").forEach(a => addDrag(a))
-   
+    import {} from "./src/app-view.js"
+    let v = document.querySelector("source");
+    if (window.location.origin.indexOf('http:')) {
+      v.setAttribute("source", "https://firebasestorage.googleapis.com/v0/b/myaccounts-4a6c7.appspot.com/o/trailer.mov?alt=media&token=b0fbcbc4-1fbf-4478-9f34-f676d58d869d")
+    }
   </script>
  
 </html>

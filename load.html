@@ -37,6 +37,17 @@
     image.addEventListener("load", () => {
         svg.toggleAttribute("loaded", true);
     })
+
+
+
+    svg.addEventListener("silli", (e) => {
+        console.log("xx");
+        // e.preventDefault()
+    })
+
+    const e = new Event("silli", {bubbles: true, cancelable: true});
+    image.dispatchEvent(e);
+    console.log(e);
 </script>
 
 <style>

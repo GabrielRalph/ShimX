@@ -1,22 +1,9 @@
-"use strict";
-import { SvgPlus } from "./SvgPlus/4.js";
+import { SvgPlus } from "../SvgPlus/4.js";
+import * as m3 from "./m3.js"
+import {twgl} from "./twgl-full.js"
+let Canvas = null;
+let rendered = false;
 
-
-export function relative({clientX, clientY}, canvas, mult = -0.025) {
-  let bbox = canvas.getBoundingClientRect();
-  let rx = (clientX - bbox.x) / bbox.width;
-  let ry = (clientY - bbox.y) / bbox.height;
-
-  rx = rx > 1 ? 1 : (rx < 0 ? 0 : rx);
-  ry = ry > 1 ? 1 : (ry < 0 ? 0 : ry);
-
-
-  return [rx * mult, ry * mult];
-}
-
-export function round(x, y = 3) {
-  return Math.round(Math.pow(10, y) * x) / Math.pow(10, y);
-}
 
 async function createTexture(gl, options) {
   return new Promise((resolve, reject) => {
@@ -27,27 +14,17 @@ async function createTexture(gl, options) {
   })
 }
 
-export async function delay(time) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, time)
-  })
-}
-
-
-
-let rendered = false;
-export async function initialise() {
-
+function create_scripts(){
   let scripts = new SvgPlus("div");
   scripts.styles = {display: "contents"};
   document.body.appendChild(scripts);
-
   
-    // Vertex Shader
+  
+  // Vertex Shader
   scripts.innerHTML += `<script id="vs" type="f">
   attribute vec2 position;
   attribute vec2 texcoord;
-
+  
   uniform mat3 u_matrix;
 
   varying vec2 v_texcoord;
@@ -79,10 +56,30 @@ export async function initialise() {
     gl_FragColor = original;
   }
   </script>`
+}
 
-  // Get A WebGL context
+export function relative({clientX, clientY}, canvas = Canvas) {
+  let bbox = canvas.getBoundingClientRect();
+  let rx = (clientX - bbox.x) / bbox.width;
+  let ry = (clientY - bbox.y) / bbox.height;
+
+  rx = rx > 1 ? 1 : (rx < 0 ? 0 : rx);
+  ry = ry > 1 ? 1 : (ry < 0 ? 0 : ry);
+
+
+  return [rx, ry];
+}
+
+export function round(x, y = 3) {
+  return Math.round(Math.pow(10, y) * x) / Math.pow(10, y);
+}
+
+ // Get A WebGL context
   /** @type {HTMLCanvasElement} */
-  const canvas = document.getElementById("canvas");
+export async function initialise(canvas) {
+  Canvas = canvas;
+  create_scripts();
+ 
   const gl = canvas.getContext("webgl");
   if (!gl) {
     return;
@@ -99,7 +96,6 @@ export async function initialise() {
     src: "./Assets/d_map.png", crossOrigin: '',
   });
   
-  console.log("textures")
   // compile shaders, link program, lookup location
   const programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
 
