@@ -26,7 +26,7 @@ export class IconGroup extends SvgPlus {
                 
                 let moicons = [...document.elementsFromPoint(e.x, e.y)].filter(e => e.icon_name).map(e => this.icons[e.icon_name]);
     
-                if (moicons.length > 0) this.styles = {cursor: "pointer"};
+                document.body.style.setProperty("cursor", moicons.length>0 ? "pointer" : null);
                
                 for (let icon of moicons) {
                     icon.cmo = true;
@@ -90,19 +90,23 @@ export class IconGroup extends SvgPlus {
     
 
             let name = `${icon.name}.png`;
-            if (icon.imgName) name = icon.imgname;
-            _icon.img = this.images.createChild("img", {
-                src: `./Assets/Icons/${name}`,
-                name: icon.name,
-                class: 'icon',
-                styles: {
-                    '--c1x': icon.c1[0],
-                    '--c1y': icon.c1[1],
-                    '--c2x': icon.c2[0],
-                    '--c2y': icon.c2[1],
-                    '--h': icon.height
-                }
-            });
+            if ("imgName" in icon) name = icon.imgName;
+            if (typeof name === "string") {
+                _icon.img = this.images.createChild("img", {
+                    src: `./Assets/Icons/${name}`,
+                    name: icon.name,
+                    class: 'icon',
+                    styles: {
+                        '--c1x': icon.c1[0],
+                        '--c1y': icon.c1[1],
+                        '--c2x': icon.c2[0],
+                        '--c2y': icon.c2[1],
+                        '--h': icon.height
+                    }
+                });
+            } else {
+                _icon.img = new SvgPlus('div');
+            }
             if (icon.imgProps) _icon.img.props = icon.imgProps;
             _icons[icon.name] = _icon;
             iconsList.push(_icon);

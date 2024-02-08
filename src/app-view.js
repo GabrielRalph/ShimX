@@ -1,5 +1,6 @@
 import { SvgPlus } from "../SvgPlus/4.js";
 import { } from "./icons.js";
+import { } from "./ranks.js"
 let DF_promise = import("./depth-fader.js");
 let DF = null;
 
@@ -18,6 +19,14 @@ const ICONS = [
         height: 0.434,
         c1: [0.544, 0.571],
         c2: [0.558, 0.586],
+        imgProps: {draggable: false}
+    },
+    {
+        name: "t",
+        imgName: null,
+        height: 0.145,
+        c1: [0.627, 0.715],
+        c2: [0.627, 0.715],
         imgProps: {draggable: false}
     },
     {
@@ -63,6 +72,8 @@ class AppView extends SvgPlus {
         })
         await this.iconGroup.loadIcons(ICONS);
         this.addEventListener("hoverleave", (e) => this.onIconHoverLeave(e))
+        let ranks = this.querySelector("leader-board");
+        ranks.close.onclick = () => this.page = null;
         let d = MIN_LOADER_TIME - (performance.now() - t0);
         console.log(d);
         await delay(d)
@@ -96,7 +107,12 @@ class AppView extends SvgPlus {
                     break;
 
                 case "cf": 
-                    this.setAttribute("page", "credits")
+                    this.page = "credits";
+                    break;
+
+                case "t": 
+                    this.page = "ranks";
+                    break;
             }
         }
     }

@@ -31,21 +31,6 @@
     let loading = document.getElementById("loading-text");
     let submit = document.querySelector("[name='submit']");
 
-    let chars = [..."Loading"].map(char => {let l = document.createElement("SPAN"); l.innerHTML = char; loading.appendChild(l); return l})
-    let loaded = false;
-    let next = () => {
-        let t = performance.now() / 200;
-        let adj = 0;
-        for (let char of chars) {
-            let scale = 0.3 * Math.sin(t + adj);
-            adj += 2*Math.PI/chars.length;
-            char.style.setProperty("transform", `scale(${1+scale})`)
-        }
-
-        if (!loaded) window.requestAnimationFrame(next);
-    }
-    window.requestAnimationFrame(next);
-
     const key = "super_secret_specieal_key_19_24_3301_59991";
     async function renderRanks(info = null){
         await watchRanks(key, (ranks) => {
