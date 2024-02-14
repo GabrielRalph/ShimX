@@ -65,6 +65,13 @@ class AppView extends SvgPlus {
             canvas: "canvas"
         }
         for (let name in elements) this[name] = this.querySelector(elements[name]);
+        this.video.addEventListener("timeupdate", (event) => {
+            console.log(video.currentTime);
+            if (video.currentTime > 21) {
+                console.log("fadding video");
+                this.page = null;
+            }
+        });
         DF = await DF_promise;
         await DF.initialise(this.canvas);        
         window.addEventListener("mousemove", (e) => {
@@ -123,11 +130,7 @@ class AppView extends SvgPlus {
         video.play();
         this.page = "trailer"
         this.requestFullscreen()
-        video.addEventListener("timeupdate", (event) => {
-            if (video.currentTime > 21) {
-                this.page = null;
-            }
-        });
+        
     }
 }
 
