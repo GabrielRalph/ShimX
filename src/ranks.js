@@ -14,9 +14,9 @@ class LeaderBoard extends SvgPlus {
             </div>
         </div>
         <div id = "input" class = "window" >
-            <div class="head">Please Enter Name</div>
+            <div class="head">Please Make a Codename.</div>
             <div class="body">
-                <span>Name:</span><input class = "btn" type = "text" name = "name"><b class = "btn" name = "submit">SUBMIT</b>
+                <span>Codename:</span><input class = "btn" type = "text" name = "name"><b class = "btn" name = "submit">SUBMIT</b>
             </div>
         </div>`
         this.mode = "loading"

@@ -67,9 +67,9 @@ class AppView extends SvgPlus {
         for (let name in elements) this[name] = this.querySelector(elements[name]);
         let {video} = this;
         video.addEventListener("timeupdate", (event) => {
-            console.log(video.currentTime);
+            // console.log(video.currentTime);
             if (video.currentTime > 21) {
-                console.log("fadding video");
+                // console.log("fadding video");
                 this.page = null;
             }
         });
@@ -106,9 +106,7 @@ class AppView extends SvgPlus {
     }
 
     onclick(e) {
-        if (e.icons) {
-            console.log(e.icons);
-            console.log(e.icons[0]);
+        if (e.icons && e.icons.length > 0) {
             switch (e.icons[0].name) {
                 case "tv":
                     this.playTrailer();
