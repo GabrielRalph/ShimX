@@ -65,7 +65,8 @@ class AppView extends SvgPlus {
             canvas: "canvas"
         }
         for (let name in elements) this[name] = this.querySelector(elements[name]);
-        this.video.addEventListener("timeupdate", (event) => {
+        let {video} = this;
+        video.addEventListener("timeupdate", (event) => {
             console.log(video.currentTime);
             if (video.currentTime > 21) {
                 console.log("fadding video");
