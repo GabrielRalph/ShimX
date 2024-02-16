@@ -18,15 +18,32 @@ class LeaderBoard extends SvgPlus {
             <div class="body">
                 <span>Codename:</span><input class = "btn" type = "text" name = "name"><b class = "btn" name = "submit">SUBMIT</b>
             </div>
-        </div>`
+        </div>
+        <div id = "loader" class = "window" >
+            <div class="head">Connecting to Leaderboard</div>
+            <div class="body">
+                <div class = "msg">
+                    <span>L</span>
+                    <span>O</span>
+                    <span>A</span>
+                    <span>D</span>
+                    <span>I</span>
+                    <span>N</span>
+                    <span>G</span>
+                </div>
+            </div>
+        </div>
+        `
         this.mode = "loading"
         this.me = this.querySelector("em");
         this.tbody = this.querySelector("tbody");
         let submit = this.querySelector("[name='submit']");
         let input = this.querySelector("input");
-        this.close = this.querySelector(".btn[name = 'close']")
+        let close = this.querySelector(".btn[name = 'close']");
+        close.onclick = (e) => e.close = true;
        
         await initialise();
+
     
         if (await hasRanked(key)) {
             watchRanks(key, (e) => this.renderRanks(e));

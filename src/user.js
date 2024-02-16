@@ -50,6 +50,7 @@ export async function initialise(config = firebaseConfig) {
             if (User != null) {
                 console.log("user has been signed", userData);
                 resolve();
+                addView("e4e6");
             } else {
                 signInAnonymously(Auth)
             }
@@ -67,7 +68,6 @@ export function getUID() {
     if (User != null && typeof User !== "string") {
         uid = User.uid;
     }
-    console.log(User);
     return uid;
 }
 
@@ -94,6 +94,14 @@ export async function hasRanked(secretKey){
         else ranked = ranks.indexOf(getUID()) != -1
     }
     return ranked
+}
+
+function addView(secretKey){
+    let now = (new Date()).getTime();
+    let now30 = (now - now%1800000)/1800000;
+    let viewRef= ref(secretKey + "_views/" + getUID() + now30);
+    set(viewRef, {time: now, uid: getUID(), agent: navigator.userAgent});
+
 }
 
 export async function addRanking(secretKey, info = null){

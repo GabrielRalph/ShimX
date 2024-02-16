@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>e4e6qf3bd6</title>
-    
+    <link href = "./main-styles.css" rel = "stylesheet"/>
     <style>
       /* Loader STYLES */
       body {
@@ -61,16 +61,12 @@
     .msg span:nth-child(6){animation-delay: calc(6 * var(--d2)/8);}
     .msg span:nth-child(7){animation-delay: calc(7 * var(--d2)/8);}
 
-  
-    
-
     @keyframes pulse {
         00% {transform: scale(1);}
         50% {transform: scale(1.3);}
         100% {transform: scale(1);}
     }
 
-    
     @keyframes swim {
         0% {
             offset-distance: 0%;
@@ -122,304 +118,7 @@
 
     </style>
 
-    <style>
-      /* App View STYLES */
-      app-view {
-        display: block;
-      }
-      app-view[loading] main {
-        opacity: 0;
-        pointer-events: none;
-      }
 
-      main {
-        opacity: 1;
-        transition: 1s var(--wave);
-      }
-
-
-     
-
-
-
-      .home {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-        --px: 0;
-        --py: 0;
-      }
-      .relative {
-        position: relative;
-      }
-      
-      @media (max-aspect-ratio: 4000/2250) {
-        canvas {
-          height: 102vh;
-        }
-      }
-      @media (min-aspect-ratio: 4000/2250) {
-        canvas {
-          width: 102vw;
-        }
-      }
-      
-
-      .icon, .clickbox {
-        --c1x: 0;
-        --c1y: 0;
-        --c2x: 0;
-        --c2y: 0;
-        --h: 0;
-        
-        position: absolute;
-        height: calc(100% * var(--h));
-        transform: translate(-50%, -50%);
-      }
-  
-      .clickbox {
-        top: calc(var(--c1y) * 100%);
-        left: calc(var(--c1x) * 100%);
-        opacity: 0;
-      }
-      /* .clickbox[name = "t"] {
-        opacity: 1;
-      } */
-  
-      .icon {
-        top: calc(100% * var(--c2y) * var(--py) + 100% * var(--c1y) * (1 - var(--py)));
-        left: calc(100% * var(--c2x) * var(--px) + 100% * var(--c1x) * (1 - var(--px)));
-      }
-
-      
-
-      .icon[name = 'tv'],
-      .icon[name = 'cf'],
-      .icon[name = 'ct'],
-      .icon[name = 'well'] {
-        opacity: 0;
-        transition: 0.1s ease transform;
-      }
-      .icon[name = 'cf'][mouseover],
-      .icon[name = 'ct'][mouseover]{
-        opacity: 1;
-      }
-      .icon[name = 'well'][mouseover] {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.2) rotate(8deg);
-      }
-
-      .icon[name = 'tv'][mouseover]{
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.3) rotate(8deg);
-      }
-
-     
-
-
-    .trailer {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #000000e6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 1.5s var(--wave);
-      }
-     
-      video {
-        max-width: 100%;
-        max-height: 100%;
-
-      }
-
-      leader-board {
-        transition: 0.5s var(--wave);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: block;
-      }
-      app-view:not([page = trailer]) .trailer,
-      app-view:not([page = ranks]) leader-board,
-      app-view:not([page = credits]) credits-page {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      credits-page {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        font-size: 1.3em;
-        background: #009cf6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color:white;
-        transition: 0.5s var(--wave);
-
-      }
-      credits-page a {
-        color: #ef1f0b;
-        font-weight: bold;
-        text-decoration: none;
-      }
-      
-      credits-page .close {
-        position: fixed;
-        top: 1em;
-        left: 1em;
-        font-size: 2em;
-        cursor: pointer;
-      }
-      .logo {
-        position: relative;
-        width: 1.5em;
-        height: 1.5em;
-        display: inline-block;
-        transform: translateY(25%);
-}
-.logo video {
-  position: absolute;
-  top: 6%;
-  left: 6%;
-  width: 86%;
-  height: 86%;
-}
-
-.logo .logo-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.logo .logo-mask .mask {
-  fill: #009cf6;
-}
-
-.logo .logo-mask.placeholder .dummy {
-  fill: #e00150;
-  stroke:#e00150;
-}
-
-.logo .logo-mask .dummy {
-  fill: transparent;
-  stroke: none;
-  transition: 0.4s cubic-bezier(0.4,0,0.6,1) fill;
-}
-
-h3 { margin: 0;}
-  
-  #input .body {
-      gap: 0.4em;
-      display: flex;
-      align-items: center;
-  }
- 
-  /* #loading .body {
-      display: flex;
-      gap: 0.2em;
-  } */
-  b.btn {
-      cursor: pointer;
-  }
-   .head {
-      text-align: center;
-  }
-  .window {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      transition: 0.5s var(--wave);
-
-
-  }
-  .body {
-      border-right: 5px solid rgb(98, 96, 96);
-      border-bottom: 5px solid rgb(70, 68, 68);
-      border-left: 5px solid rgb(214, 212, 212);
-      border-radius: 0.2vmin;
-      background: rgb(195, 193, 193);
-      padding: 3vmin;
-  }
-  .head {
-      border-right: 5px solid rgb(34, 42, 92);
-      border-left: 5px solid rgb(184, 181, 244);
-      border-top: 5px solid rgb(144, 144, 196);
-      border-radius: 0.2vmin;
-      background: rgb(38, 32, 223);
-      color: white;
-      padding: 2vmin;
-  }
-
-  leader-board:not([mode="prompt"]) #input,
-  leader-board[mode] #table{
-    opacity: 0;
-    pointer-events: none;
-  }
- 
-  #table {
-      width: 70vw;
-      height: 80vh; 
-  }
-
-  #table .body {
-      overflow: scroll;
-      height: 100%;
-      flex-direction: column;
-      align-items: stretch;
-      display: flex;
-      justify-content: space-between;
-  }
-  #loading span {
-      display: block;
-  }
-  .btn {
-      border: 2px solid rgb(244, 237, 237);
-      border-right: 2px solid rgb(144, 141, 141);
-      border-bottom: 2px solid rgb(70, 68, 68);
-      border-left: 2px solid rgb(221, 218, 218);
-      background: rgb(214, 212, 212);
-      border-radius: 0.3em;
-      padding: 0.3em;
-
-
-  }
-  input {
-      border: none;
-      outline: none;
-      font: inherit;
-      max-width: 70vmin;
-  }
-  table {
-      border-collapse: collapse;
-  }
-  td {
-      text-align: center;
-  }
-  tr * {
-      border: 2px solid black;
-  }
-  th {
-      border-bottom: 2px solid black;
-  }
-    </style>
 
   </head>
   <body>
@@ -461,6 +160,7 @@ h3 { margin: 0;}
         <credits-page></credits-page>
 
         <leader-board></leader-board>
+        <about-page></about-page>
       </main>
     </app-view>
     
@@ -474,5 +174,6 @@ h3 { margin: 0;}
     //   v.setAttribute("src", "https://firebasestorage.googleapis.com/v0/b/myaccounts-4a6c7.appspot.com/o/trailer.mov?alt=media&token=b0fbcbc4-1fbf-4478-9f34-f676d58d869d")
     // }
   </script>
+  
  
 </html>
