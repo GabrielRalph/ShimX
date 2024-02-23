@@ -16,11 +16,9 @@ const TEMPLATE = `
     </div>
     <div class = "page">
         <div class = "slides">
-            <img src="./Assets/about/bts-1.jpg">
             <img src="./Assets/about/bts-2.jpg">
             <img src="./Assets/about/bts-3.jpg">
             <img src="./Assets/about/bts-4.jpg">
-            <img src="./Assets/about/bts-5.jpg">
         </div>
 </div>
 `
@@ -28,7 +26,8 @@ async function frame(){return new Promise((resolve) => {window.requestAnimationF
 
 let wdy = 0;
 window.addEventListener("wheel", (e) => {
-    wdy = e.deltaY;
+    wdy = e.deltaY*0.7;
+    console.log('x');
 })
 
 
@@ -45,7 +44,7 @@ class AboutPage extends SvgPlus {
                 moving = true;
                 let dir = nextDir;
                 for (let i = 0; i < Math.PI/2; i+=0.05) {
-                    wdy = dir*(this.clientHeight/45)*Math.sin(i);
+                    wdy = dir*(30)*Math.sin(i);
                     await frame();
                 }
                 moving = false;
@@ -68,9 +67,9 @@ class AboutPage extends SvgPlus {
             let sdy = 0;
             let yoff = (y%h)/h;
             if (wdy > 0) {
-                sdy = yoff < 0.2 ? -14 * yoff : 18* (1 - yoff);
+                sdy = yoff < 0.4 ? -14 * yoff : 28* (1 - yoff);
             } else {
-                sdy = yoff < 0.8 ? -18 * yoff : 14 * (1 - yoff);
+                sdy = yoff < 0.6 ? -28 * yoff : 14 * (1 - yoff);
             }
     
             y += wdy + sdy;
