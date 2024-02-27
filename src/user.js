@@ -37,25 +37,28 @@ if (DUID == null) {
 
 /*  Initialize firebase, initializes the firebase app with the given configuration
     after initializing wait for an auth state change and return */
-export async function initialise(config = firebaseConfig) {
+export async function initialise(initAuth = true) {
     if (initialised) return;
+    let config = firebaseConfig;
     initialised = true;
     App = initializeApp(config);
     Database = getDatabase(App);
-    Auth = getAuth();
-    return new Promise((resolve, reject) => {
-        signInAnonymously(Auth)
-        onAuthStateChanged(Auth, async (userData) => {
-            User = userData;
-            if (User != null) {
-                console.log("user has been signed", userData);
-                resolve();
-                addView("e4e6");
-            } else {
-                signInAnonymously(Auth)
-            }
+    if (initAuth) {
+        Auth = getAuth();
+        return new Promise((resolve, reject) => {
+            signInAnonymously(Auth)
+            onAuthStateChanged(Auth, async (userData) => {
+                User = userData;
+                if (User != null) {
+                    console.log("user has been signed", userData);
+                    resolve();
+                    addView("e4e6");
+                } else {
+                    signInAnonymously(Auth)
+                }
+            });
         });
-    });
+    }
 }
 
 
@@ -84,6 +87,14 @@ export function getDB() { return Database; }
 
 // Get Ref using database
 export function ref(path) { return _ref(Database, path); }
+
+export async function watchViews(secretKey, cb){
+    if (cb instanceof Function) {
+        onValue(ref(secretKey + '_views'), (sc) => {
+            cb(sc.val());
+        })
+    }
+}
 
 export async function hasRanked(secretKey){
     let ranked = true
@@ -134,6 +145,7 @@ export async function watchRanks(secretKey, cb) {
                         let person = allData[id]
                         person.me = id == getUID();
                         person.rank = i; 
+                        person.uid = id;
                         i++; 
                         return person;
                     })

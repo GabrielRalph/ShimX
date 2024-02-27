@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href = "../main-styles.css" rel = "stylesheet"/>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+    <h1>Website Stats</h1>
+    <stats-page></stats-page>
+</body>
+<script type = "module">
+    import {} from "../src/stats.js"
+</script>
+
+<style>
+    body {
+
+        font-size: 1.8vw; 
+    }
+    .body table {width: 100%;}
+   
+    stats-page {
+        display: grid; 
+        gap: 1em;
+        width: 100%
+    }
+
+    @media (min-aspect-ratio: 3/2) {
+        body {font-size: 1.2vw;}
+        stats-page > *:first-child {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        stats-page > *:last-child {
+            grid-row: 1;
+            grid-column: 1;
+        }
+    }
+
+</style>
+
+</html>
